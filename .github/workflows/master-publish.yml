@@ -1,4 +1,4 @@
-name: Deploy Release to Maven Central
+name: Publish Master to Maven Central
 
 on:
   push:
