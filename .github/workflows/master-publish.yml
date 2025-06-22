@@ -29,17 +29,3 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: mvn -B clean deploy -Psign-artifacts -DskipTests
-
-      - name: Step 4 - Create Git tag for release
-        env:
-          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression='project.version' -q -DforceStdout)
-          echo "Creating Git tag v$VERSION"
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git fetch --tags
-          git tag "v$VERSION"
-          git remote set-url origin https://x-access-token:${GH_ACTIONS_TOKEN}@github.com/${{ github.repository }}.git
-          git push origin "v$VERSION"
-
