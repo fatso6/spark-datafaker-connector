@@ -9,10 +9,10 @@ jobs:
   publish-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Step 1 - Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java and Maven with GPG
+      - name: Step 2 - Set up Java and Maven with GPG
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -23,21 +23,16 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Extract version from pom.xml
-        id: get-version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression='project.version' -q -DforceStdout)
-          echo "Project version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Build and deploy release
+      - name: Step 3 - Build and deploy release
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: mvn -B clean deploy -Psign-artifacts -DskipTests
 
-      - name: Create Git tag for release
+      - name: Step 4 - Create Git tag for release
+        env:
+          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
         run: |
           VERSION=$(mvn help:evaluate -Dexpression='project.version' -q -DforceStdout)
           echo "Creating Git tag v$VERSION"
@@ -45,4 +40,6 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --tags
           git tag "v$VERSION"
+          git remote set-url origin https://x-access-token:${GH_ACTIONS_TOKEN}@github.com/${{ github.repository }}.git
           git push origin "v$VERSION"
+
