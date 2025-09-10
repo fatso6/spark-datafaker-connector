@@ -1,6 +1,6 @@
 # 🧪 Spark DataFaker Connector
 
-![Maven Central Version](https://img.shields.io/maven-central/v/io.github.aalopatin/aalopatin-test)
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.aalopatin/spark-datafaker-connector)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/aalopatin/spark-datafaker-connector/master-publish.yml)
 ![GitHub License](https://img.shields.io/github/license/aalopatin/spark-datafaker-connector)
 
